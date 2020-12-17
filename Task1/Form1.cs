@@ -22,13 +22,34 @@ namespace Lesson6
         public Form1()
         {
             InitializeComponent();
-
+            txbx_TexField.DragEnter += new DragEventHandler(txbx_TexField_DragDrop);
+            txbx_TexField.DragEnter += new DragEventHandler(txbx_TexField_DragEnter);
+            txbx_TexField.AllowDrop = true;
         }
 
+        private void txbx_TexField_DragEnter(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.Text))
+                e.Effect = DragDropEffects.Copy;
+        }
+
+        private void txbx_TexField_DragDrop(object sender, DragEventArgs e)
+        {
+            object FileName = e.Data.GetData("FileDrop");
+            if(FileName != null)
+            {
+                var list = FileName as string[];
+                if(list != null && !string.IsNullOrWhiteSpace(list[0]))
+                {
+                    txbx_TexField.Clear();
+                    txbx_TexField.LoadFile(list[0], RichTextBoxStreamType.PlainText);
+                }
+            }
+        }
 
         void tBar_Button_Click(object sender, ToolBarButtonClickEventArgs e)
         {
-            
+
 
             switch (e.Button.ImageIndex)
             {
@@ -51,12 +72,12 @@ namespace Lesson6
                     btn_Copy_Click();
                     break;
 
-                    case 5:
+                case 5:
                     btn_Paste_Click();
                     break;
 
                 case 6:
-                    btn_Ubdo_Click();          
+                    btn_Ubdo_Click();
                     break;
 
                 case 7:
@@ -64,7 +85,7 @@ namespace Lesson6
                     break;
 
                 case 8:
-                    btn_FontColor_Click();            
+                    btn_FontColor_Click();
                     break;
 
                 case 9:
@@ -149,7 +170,7 @@ namespace Lesson6
             tBar.ButtonClick += new ToolBarButtonClickEventHandler(tBar_Button_Click);
             this.Controls.Add(tBar);
 
-           
+
         }
 
         void btn_Open_Click()
@@ -208,7 +229,7 @@ namespace Lesson6
                 }
                 else
                 {
-                    Form1_Load(sender,e);
+                    Form1_Load(sender, e);
                     this.Controls.Remove(tBar);
                     txbx_TexField.Text = "";
                 }
@@ -222,7 +243,7 @@ namespace Lesson6
 
         void btn_Copy_Click()
         {
-            copy = txbx_TexField.SelectedText;               
+            copy = txbx_TexField.SelectedText;
         }
 
         void btn_Paste_Click()
@@ -233,7 +254,7 @@ namespace Lesson6
 
         void btn_Ubdo_Click()
         {
-            txbx_TexField.Undo();           
+            txbx_TexField.Undo();
         }
 
         void btn_Redo_Click()
@@ -291,7 +312,7 @@ namespace Lesson6
             {
                 btn_SaveAs_Click();
             }
-      
+
         }
 
         void btn_Exsize_Click()
@@ -388,5 +409,9 @@ namespace Lesson6
         {
             btn_Exsize_Click();
         }
+
+     
     }
+
+   
 }
